@@ -1,2 +1,3 @@
-# DTD-Source-Scripts
-Some DTD Mechanics and testing
+# DTD
+
+this isso the DTD Test Repository and scripts source for some updates
