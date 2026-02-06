@@ -9,3 +9,5 @@ or non-commercial purposes.
 
 This license applies ONLY to this repository.  
 It does NOT grant permission to access, copy, or use any other repositories.
+
+# dont try to open personal cloud folder or acess any private resources...
