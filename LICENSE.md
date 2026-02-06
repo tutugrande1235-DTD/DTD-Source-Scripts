@@ -10,6 +10,6 @@ or non-commercial purposes.
 This license applies ONLY to this repository.  
 It does NOT grant permission to access, copy, or use any other repositories.
 
-# dont try to open personal cloud folder or acess any private resources...
+# Do not try to open personal cloud folders or access any private resources.
 
-### dont be a sneaky Exploiter, please...
+### Please, do not be a sneaky exploiter.
