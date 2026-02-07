@@ -1,0 +1,2 @@
+require("Memo.mp.lua")
+import memolua.memolang.lua
