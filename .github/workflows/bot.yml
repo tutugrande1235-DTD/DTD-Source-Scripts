@@ -12,9 +12,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Executar botcode.js
+      - name: Rodar botcode.js separado
         run: node .github/workflows/botcode.js
         env:
-          GITHUB_TOKEN: ${{ secrets.PAT }}
           COMMENT_BODY: ${{ github.event.comment.body }}
+          GITHUB_TOKEN: ${{ secrets.PAT }}
           ISSUE_NUMBER: 7
