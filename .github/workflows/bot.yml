@@ -9,11 +9,12 @@ permissions:
 jobs:
   reply:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v3
+
       - name: Executar botcode.js
-        uses: actions/github-script@v6
-        with:
-          github-token: ${{ secrets.PAT }}
-          script: node .github/workflows/botcode.js
+        run: node .github/workflows/botcode.js
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT }}
+          COMMENT_BODY: ${{ github.event.comment.body }}
+          ISSUE_NUMBER: 7
