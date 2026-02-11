@@ -15,9 +15,9 @@ if (!c || !user || !to) process.exit(0)
 
 let reply = ""
 if (c.includes("test")) {
-  reply = `dont test me @${user}!`
+  reply = `dont test me ${user}!`
 } else if (c.includes("bad")) {
-  reply = `@${user} dont be SUCK!`
+  reply = `${user} dont be SUCK!`
 }
 
 if (reply) {
