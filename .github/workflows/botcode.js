@@ -18,7 +18,7 @@ console.log("user: " + user + "\nbody: " + c)
 
 if (c.includes("test")){
   reply = `dont test me @${user}!`
-} else if (c.includes("bad") && c.includes("package")) {
+} else if (c.includes("bad")) {
   reply = `@${user} dont be SUCK!`
 }
 
