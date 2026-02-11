@@ -1,7 +1,7 @@
 const { execSync } = require("child_process")
 
-const owner = "tutugrande1235"
-const repo = "tutugrande1235-DTD"
+const owner = "tutugrande1235-DTD"
+const repo = "DTD-Source-Scripts"
 const issue_number = process.env.ISSUE_NUMBER
 const comment = process.env.COMMENT_BODY
 const token = process.env.GITHUB_TOKEN
