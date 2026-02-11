@@ -18,6 +18,8 @@ if (c.includes("test")) {
   reply = `dont test me ${user}!`
 } else if (c.includes("bad")) {
   reply = `${user} dont be SUCK!`
+} else if (to === "System") {
+  reply = `${user} im not a common user. IM A BOT!`
 }
 
 if (reply) {
