@@ -5,10 +5,10 @@ const issue_number = 7
 const comment = context.payload.comment.body
 let reply = ""
 const cbody = comment.split("@")
-const user = cbody[0]
-const to = cbody[1]
+const user = cbody[0] || "User"
+const to = cbody[1] || "User"
 let form = ""
-const c = cbody[2]
+const c = cbody[2] || "nil"
 
 if (!c || !user || !to){
   return
