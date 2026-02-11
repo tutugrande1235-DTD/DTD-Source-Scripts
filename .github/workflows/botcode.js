@@ -25,7 +25,7 @@ if (c.includes("test")) {
 
 if (reply) {
   const form = `System@${user}@${reply}`
-  const execSync = require("child_process").execSync
+  const { execSync } = require("child_process")
   const cmd = `curl -s -X POST -H "Authorization: token ${token}" -H "User-Agent: DOT-Bot" -d '{"body":"${form}"}' https://api.github.com/repos/${owner}/${repo}/issues/${issue_number}/comments`
   console.log("Executando:", cmd)
   const result = execSync(cmd).toString()
