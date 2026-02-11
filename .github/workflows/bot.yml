@@ -1,0 +1,16 @@
+name: DOT Buddy
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  reply:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Executar botcode.js
+        uses: actions/github-script@v6
+        with:
+          script: require(`${process.env.GITHUB_WORKSPACE}/.github/workflows/botcode.js`)
