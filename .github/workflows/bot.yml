@@ -15,5 +15,5 @@ jobs:
       - name: Executar botcode.js
         uses: actions/github-script@v6
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.PAT }}
           script: require(`${process.env.GITHUB_WORKSPACE}/.github/workflows/botcode.js`)
