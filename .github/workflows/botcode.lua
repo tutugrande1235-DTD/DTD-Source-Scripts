@@ -3,11 +3,14 @@ local comment = os.getenv("COMMENT_BODY")
 local token = os.getenv("GITHUB_TOKEN")
 local issue = os.getenv("ISSUE_NUMBER")
 
-if issue ~= 7 then return end
+if issue == "7" then
+    print(issue)
+else
+    print(issue)
+    return
+end
 
 if not DTDUser then DTDUser = { name = "System" } end
-
-if not comment then comment = "test@to@abc" end
 
 local user, to, body = comment:match("^(.-)@(.-)@(.*)$")
 print(user)
