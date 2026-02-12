@@ -3,6 +3,8 @@ local comment = os.getenv("COMMENT_BODY")
 local token = os.getenv("GITHUB_TOKEN")
 local issue = os.getenv("ISSUE_NUMBER")
 
+if issue ~= 7 then return end
+
 if not DTDUser then DTDUser = { name = "System" } end
 
 if not comment then comment = "test@to@abc" end
@@ -12,7 +14,8 @@ print(user)
 print(to)
 print(body)
 
-if user ~= DTDUser.name then return end
+if user == DTDUser.name then return end
+if to ~= DTDUser.name then return end
 
 print("\27[93mloading issue service...")
 do
@@ -22,11 +25,21 @@ end
 
 local reply = ""
 
-if to == DTDUser.name then
-    
+do
+    if body:sub(1,4) == "play" then
+        local number = tonumber(body:sub(6))
+        if number then
+            local random = math.floor(math.random(1, 10) + 0.5)
+            if random == number then
+                reply = "YOU WIN number got "..random
+            else
+                reply = "hmm... you lose, number got "..random.." and you chose "..number
+            end
+        end
+    end
 end
 
-if reply then
+if reply and reply ~= "" then
     local form = "System@"..user.."@"..reply
     local ins = nil
     if form then
