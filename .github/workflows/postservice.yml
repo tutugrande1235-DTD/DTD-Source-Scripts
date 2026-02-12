@@ -17,4 +17,4 @@ jobs:
       - name: Run printer.lua
         env:
           ASK: ${{ secrets.ASK }}
-        run: lua PostService.lua
+        run: lua Services/PostService.lua
