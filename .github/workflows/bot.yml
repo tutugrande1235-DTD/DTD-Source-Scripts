@@ -3,6 +3,7 @@ name: DOT Buddy
 on:
   issue_comment:
     types: [created]
+
 permissions:
   issues: write
 
@@ -12,8 +13,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Rodar botcode.js
-        run: node .github/workflows/botcode.js
+      # Instalar Lua
+      - name: Instalar Lua
+        run: sudo apt-get update && sudo apt-get install -y lua5.4
+
+      # Rodar botcode.lua que está na mesma pasta que o YML
+      - name: Rodar botcode.lua
+        run: lua botcode.lua
         env:
           COMMENT_BODY: ${{ github.event.comment.body }}
           GITHUB_TOKEN: ${{ secrets.PAT }}
