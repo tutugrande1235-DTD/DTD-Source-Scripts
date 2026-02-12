@@ -36,6 +36,10 @@ do
                 reply = "hmm... you lose, number got "..random.." and you chose "..number
             end
         end
+    elseif body:match("ugly") then
+        reply = "you too"
+    else
+        reply = "im a not a COMMON USER "..user.."!!!"
     end
 end
 
