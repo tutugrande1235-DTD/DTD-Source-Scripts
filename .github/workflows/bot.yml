@@ -19,7 +19,7 @@ jobs:
 
       # Rodar botcode.lua que está na mesma pasta que o YML
       - name: Rodar botcode.lua
-        run: lua botcode.lua
+        run: lua .github/workflows/botcode.lua
         env:
           COMMENT_BODY: ${{ github.event.comment.body }}
           GITHUB_TOKEN: ${{ secrets.PAT }}
