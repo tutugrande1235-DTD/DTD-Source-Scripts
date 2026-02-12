@@ -12,6 +12,8 @@ print(user)
 print(to)
 print(body)
 
+if user ~= DTDUser.name then return end
+
 print("\27[93mloading issue service...")
 do
     local ss = io.popen("curl -s https://raw.githubusercontent.com/nathanc0dxxx-cpu/DTD/main/SystemManagers/DTDIssueService.lua")
