@@ -13,12 +13,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      # Instalar Lua
-      - name: Instalar Lua
+      
+      - name: install lua
         run: sudo apt-get update && sudo apt-get install -y lua5.4
 
-      # Rodar botcode.lua que está na mesma pasta que o YML
-      - name: Rodar botcode.lua
+      - name: run bot code
         run: lua .github/workflows/botcode.lua
         env:
           COMMENT_BODY: ${{ github.event.comment.body }}
