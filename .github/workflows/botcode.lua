@@ -80,6 +80,17 @@ if reply and reply ~= "" then
         if ins ~= nil then
             DTDIssueService.comment.add(ins, form)
             print("\27[92mcommented sucess!")
+            print("\27[93mremoving garbage...")
+            local comments = DTDIssueService.comment.read(ins)
+            if not comments then print("\27[91mfail") else
+                for i,v in ipairs(comments) do
+                    if v.body == comment then
+                        DTDIssueService.comment.remove(v.id)
+                        print("\27[92mremoved!!!")
+                        break
+                    end
+                end
+            end
         end
     end
 end
