@@ -10,12 +10,17 @@ else
     return
 end
 
+if not comment then return end
+
 if not DTDUser then DTDUser = { name = "System" } end
 
 local user, to, body = comment:match("^(.-)@(.-)@(.*)$")
-print(user)
-print(to)
-print(body)
+
+if user and to and body then
+    print(user)
+    print(to)
+    print(body)
+end
 
 if user == DTDUser.name then return end
 if to ~= DTDUser.name then return end
@@ -28,8 +33,12 @@ end
 
 local reply = ""
 
+
+
 do
+    
     if body:sub(1,4) == "play" then
+        
         local number = tonumber(body:sub(6))
         if number then
             local random = math.floor(math.random(1, 10) + 0.5)
@@ -39,12 +48,23 @@ do
                 reply = "hmm... you lose, number got "..random.." and you chose "..number
             end
         end
-    elseif body:match("ugly") then
+        
+    elseif body:match("ugly") and (not body:match("not")) then
+        
         reply = "you too"
+        
+    elseif body:match("info") and body:match("give") and (not body:match("dont")) then
+        reply = "if you try to vanish the market you will get what you want...\nOKAY!!!\n your ugly name is "..user.."\n and i dont know your id...\nSTOP BEING LAZY AND GET THE AccountStatus PACKAGE!!!!"
+        
     else
+        
         reply = "im a not a COMMON USER "..user.."!!!"
+        
     end
+    
 end
+
+
 
 if reply and reply ~= "" then
     local form = "System@"..user.."@"..reply
