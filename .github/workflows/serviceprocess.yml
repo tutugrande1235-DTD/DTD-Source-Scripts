@@ -2,7 +2,7 @@ name: ServiceProcessor
 
 on:
   repository_dispatch:
-    types: [service]
+    types: [post]
 
 jobs:
   process:
@@ -14,6 +14,7 @@ jobs:
       FILE: ${{ github.event.client_payload.file }}
       CONTENT: ${{ github.event.client_payload.content }}
       PAT: ${{ secrets.PAT }}
+      MODE: ${{ github.event.client_payload.mode }}
 
     steps:
       - name: Checkout
