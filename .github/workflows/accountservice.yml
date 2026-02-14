@@ -1,8 +1,8 @@
-name: ServiceManager
+name: AccountCreator
 
 on:
   repository_dispatch:
-    types: [post]
+    types: [newuser]
 
 jobs:
   process:
