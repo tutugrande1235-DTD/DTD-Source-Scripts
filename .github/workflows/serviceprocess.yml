@@ -13,7 +13,7 @@ jobs:
       PASS: ${{ github.event.client_payload.pass }}
       FILE: ${{ github.event.client_payload.file }}
       CONTENT: ${{ github.event.client_payload.content }}
-      ADMIN_PAT: ${{ secrets.PAT }}
+      PAT: ${{ secrets.PAT }}
 
     steps:
       - name: Checkout
