@@ -1,4 +1,4 @@
-name: ServiceProcessor
+name: ServiceManager
 
 on:
   repository_dispatch:
