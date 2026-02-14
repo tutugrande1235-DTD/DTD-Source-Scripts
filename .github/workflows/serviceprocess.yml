@@ -1,0 +1,26 @@
+name: ServiceProcessor
+
+on:
+  repository_dispatch:
+    types: [service]
+
+jobs:
+  process:
+    runs-on: ubuntu-latest
+
+    env:
+      USER: ${{ github.event.client_payload.user }}
+      PASS: ${{ github.event.client_payload.pass }}
+      FILE: ${{ github.event.client_payload.file }}
+      CONTENT: ${{ github.event.client_payload.content }}
+      ADMIN_PAT: ${{ secrets.PAT }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Instalar Lua
+        run: sudo apt-get update && sudo apt-get install -y lua5.4
+
+      - name: Executar script
+        run: lua .github/workflows/serviceprocessorcode.lua
