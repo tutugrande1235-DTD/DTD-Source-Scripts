@@ -77,5 +77,9 @@ do
 end
 
 if procced == true then
-    _G.DTDPostService.post(content, file.."@"..user, mode)
+    if file:match("^(.-)/") then
+        _G.DTDPostService.post(content, file.."@"..user, mode)
+    else
+        print("\27[91muse a folder to create organizated files!")
+    end
 end
