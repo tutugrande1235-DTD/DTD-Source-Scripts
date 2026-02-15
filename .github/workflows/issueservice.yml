@@ -23,7 +23,7 @@ jobs:
 
       - name: Executar script
         run: |
-          PASS="${{ github.event.client_payload.pass }}"
+          export PASS="${{ github.event.client_payload.pass }}"
           ACTION="comment-new"
           
           lua .github/workflows/issueservicecode.lua
