@@ -1,4 +1,4 @@
-name: ServiceManager
+name: CloudCalls
 
 on:
   repository_dispatch:
