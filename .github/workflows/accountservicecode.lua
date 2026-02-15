@@ -48,7 +48,7 @@ do
                 if hash then
                     local strucn = hash.."\n"..id.."\n"..salt
                     
-                    _G.ServerPostService.post("Accounts/"..strucn, username, "POST")
+                    _G.ServerPostService.post(strucn, "Accounts/"..username, "POST")
                     print("\27[92mgenerated!")
                 else
                     print("\27[91mfailed while generating hash...")
