@@ -1,7 +1,7 @@
 local username = os.getenv("USER")
 local pass = os.getenv("PASS")
 local token = os.getenv("PAT")
-os.execute("clear")
+
 print("\27[93minitializing...")
 
 if not username then print("\27[91mno username provided!") end
@@ -65,11 +65,4 @@ do
     end
 end
 
-print("cleaning terminal logs...")
-for i = 1,200 do
-    io.write("\27[1A")
-end
-for i = 1,200 do
-    print("\rLINE REMOVED: #########################################")
-end
-print("cleaned!")
+os.execute("cls")
