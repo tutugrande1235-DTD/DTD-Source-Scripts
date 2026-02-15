@@ -1,2 +1,0 @@
-require("Memo.mp.lua")
-require("memolua.memolang.lua")
