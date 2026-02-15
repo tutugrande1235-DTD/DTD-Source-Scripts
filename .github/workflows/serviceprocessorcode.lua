@@ -5,7 +5,7 @@ local file = os.getenv("FILE")
 local content = os.getenv("CONTENT")
 local mode = os.getenv("MODE")
 local users = {}
-os.execute("clear")
+
 print("\27[93minitializing...")
 
 if not token then print("\27[91mno token found!") return end
@@ -84,11 +84,4 @@ if procced == true then
     end
 end
 
-print("cleaning terminal logs...")
-for i = 1,200 do
-    io.write("\27[1A")
-end
-for i = 1,200 do
-    print("\rLINE REMOVED: #########################################")
-end
-print("cleaned!")
+os.execute("cls")
