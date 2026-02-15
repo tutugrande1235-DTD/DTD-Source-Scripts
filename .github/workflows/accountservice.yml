@@ -21,5 +21,5 @@ jobs:
 
       - name: Executar script
         run: |
-          export PASS="${{ github.event.client_payload.pass }}"
+          echo "PASS=${{ github.event.client_payload.PASS }}" >> $GITHUB_ENV
           lua .github/workflows/accountservicecode.lua
