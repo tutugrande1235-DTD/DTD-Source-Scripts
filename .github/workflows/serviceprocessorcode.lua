@@ -29,6 +29,11 @@ do
     if s then load(s:read("*a"))() s:close() else print("\27[91merror while loading service 2...") return end
 end
 
+do
+    local s = io.popen("curl -s -H 'Authorization: token "..token.."' https://raw.githubusercontent.com/nathanc0dxxx-cpu/DTD/main/SystemManagers/ServerIssueService.lua")
+    if s then load(s:read("*a"))() s:close() else print("\27[91merror while loading service 3...") return end
+end
+
 local check = false
 local procced = false
 
@@ -62,7 +67,7 @@ do
                 for v in c:gmatch("%S+") do
                     table.insert(args, v)
                 end
-                
+
                 if args[1] then
                     local hash = simple_hash(pass, args[3])
                     if hash == args[1] then
@@ -83,6 +88,17 @@ end
 if procced == true then
     if file:match("^(.-)/") then
         _G.ServerPostService.post(content, file.."@"..user, mode)
+        if mode == "POST" then
+            _G.ServerIssueService.new(file.."@comments")
+        elseif mode == "DELETE" then
+            local issues = _G.ServerIssueService.get()
+            for i,v in ipairs(issues) do
+                if v.content == file.."@comments" then
+                    _G.ServerIssueService.close(v.id)
+                    break
+                end
+            end
+        end
     else
         print("\27[91muse a folder to create organizated files!")
     end
