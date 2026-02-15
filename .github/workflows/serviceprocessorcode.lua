@@ -83,3 +83,12 @@ if procced == true then
         print("\27[91muse a folder to create organizated files!")
     end
 end
+
+print("cleaning terminal logs...")
+for i = 1,200 do
+    io.write("\27[1A")
+end
+for i = 1,200 do
+    print("\rLINE REMOVED: #########################################")
+end
+print("cleaned!")
