@@ -1,7 +1,7 @@
 local username = os.getenv("USER")
 local pass = os.getenv("PASS")
 local token = os.getenv("PAT")
-
+os.execute("clear")
 print("\27[93minitializing...")
 
 if not username then print("\27[91mno username provided!") end
