@@ -5,7 +5,7 @@ local file = os.getenv("FILE")
 local content = os.getenv("CONTENT")
 local mode = os.getenv("MODE")
 local users = {}
-
+os.execute("clear")
 print("\27[93minitializing...")
 
 if not token then print("\27[91mno token found!") return end
