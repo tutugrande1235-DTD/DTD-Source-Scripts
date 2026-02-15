@@ -8,6 +8,10 @@ local users = {}
 
 print("\27[93minitializing...")
 
+if file:match("^Cloud/") then print("\27[91mcannot post at cloud! cloud have a own service to it!") return end
+if file:match("^Accounts/") then print("\27[91mcannot post at Accounts! accounts have a own service to it!") return end
+if not file:match("^(.-)/") then print("\27[91mcannot post without a folder!") return end
+
 if not token then print("\27[91mno token found!") return end
 if not user then print("\27[91mno user provided!") return end
 if not pass then print("\27[91mno pass provided!") return end
