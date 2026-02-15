@@ -1,8 +1,8 @@
-name: IssueComment
+name: IssueService
 
 on:
   repository_dispatch:
-    types: [newcomment]
+    types: [comment]
 
 jobs:
   process:
