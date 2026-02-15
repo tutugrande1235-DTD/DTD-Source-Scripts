@@ -19,10 +19,13 @@ jobs:
       - name: Instalar Lua
         run: sudo apt-get update && sudo apt-get install -y lua5.4
 
-      - name: Set ENV
-        id: env_pass
+      - name: set
+        id: env_vars
         run: |
+          lua cleaner.lua
           echo "PASS=${{ github.event.client_payload.PASS }}" >> $GITHUB_ENV
+          lua cleaner.lua
+
       - name: Executar script
         run: |
           lua .github/workflows/accountservicecode.lua
