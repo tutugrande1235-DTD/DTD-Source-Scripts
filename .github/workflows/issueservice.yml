@@ -13,6 +13,8 @@ jobs:
       PAT: ${{ secrets.PAT }}
       ISSUE: ${{ github.event.client_payload.issue }}
       CONTENT: ${{ github.event.client_payload.content }}
+      ACTION: ${{ github.event.client_payload.action }}
+      
 
     steps:
       - name: Checkout
@@ -24,6 +26,5 @@ jobs:
       - name: Executar script
         run: |
           export PASS="${{ github.event.client_payload.pass }}"
-          ACTION="comment-new"
           
           lua .github/workflows/issueservicecode.lua
