@@ -11,7 +11,8 @@ jobs:
     env:
       USER: ${{ github.event.client_payload.user }}
       PAT: ${{ secrets.PAT }}
-      ISSUE: ${{ github.event.client_payload.number
+      ISSUE: ${{ github.event.client_payload.issue }}
+      CONTENT: ${{ github.event.client_payload.content }}
 
     steps:
       - name: Checkout
@@ -23,4 +24,6 @@ jobs:
       - name: Executar script
         run: |
           PASS="${{ github.event.client_payload.pass }}"
+          ACTION="comment-new"
+          
           lua .github/workflows/issueservicecode.lua
