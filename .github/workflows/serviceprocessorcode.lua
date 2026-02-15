@@ -16,7 +16,7 @@ if not content then print("\27[91mno content received!") return end
 
 print("\27[93mloading services...")
 do
-    local s = io.popen("curl -s -H 'Authorization: token "..token.."' https://raw.githubusercontent.com/nathanc0dxxx-cpu/DTD/main/SystemManagers/DTDPostService.lua")
+    local s = io.popen("curl -s -H 'Authorization: token "..token.."' https://raw.githubusercontent.com/nathanc0dxxx-cpu/DTD/main/SystemManagers/ServerPostService.lua")
     if s then load(s:read("*a"))() s:close() else print("\27[91merror while loading service 1...") return end
 end
 
