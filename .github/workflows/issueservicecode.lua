@@ -59,8 +59,12 @@ if procced == true then
         end
     end
     if id ~= nil then
-        local strucn = user.."@"..content
-        ServerIssueService.comment.add(id, strucn)
+        if action == "add" then
+            local strucn = user.."@"..content
+            ServerIssueService.comment.add(id, strucn)
+        elseif action == "remove" then
+            ServerIssueService.comment.remove(id)
+        end
     end
 end
 print("\27[30m[proccess completed!]")
