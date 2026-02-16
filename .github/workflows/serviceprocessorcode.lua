@@ -92,8 +92,12 @@ if procced == true then
             _G.ServerIssueService.new(file:gsub("/content","").."@comments")
         elseif mode == "DELETE" and file:match("^Market/") and (not file:match("/description$")) then
             local issues = _G.ServerIssueService.get()
+            local filed = file
+            filed = filed:gsub("Market/","")
+            filed = filed:gsub("/content","")
+            filed = filed:gsub("@"..user,"")
             for i,v in ipairs(issues) do
-                if v.content == file:gsub("/content","").."@comments" then
+                if v.content == filed.."@comments" then
                     _G.ServerIssueService.close(v.id)
                     break
                 end
