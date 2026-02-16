@@ -86,16 +86,17 @@ do
 end
 
 if procced == true then
+    local filed = file
+    filed = filed:gsub("Market/","")
+    filed = filed:gsub("/content","")
+    filed = filed:gsub("@"..user,"")
+    
     if file:match("^(.-)/") then
         _G.ServerPostService.post(content, file.."@"..user, mode)
         if mode == "POST" and file:match("^Market/") and (not file:match("/description$")) then
-            _G.ServerIssueService.new(file:gsub("/content","").."@comments")
+            _G.ServerIssueService.new(filed.."@comments")
         elseif mode == "DELETE" and file:match("^Market/") and (not file:match("/description$")) then
             local issues = _G.ServerIssueService.get()
-            local filed = file
-            filed = filed:gsub("Market/","")
-            filed = filed:gsub("/content","")
-            filed = filed:gsub("@"..user,"")
             for i,v in ipairs(issues) do
                 if v.content == filed.."@comments" then
                     _G.ServerIssueService.close(v.id)
