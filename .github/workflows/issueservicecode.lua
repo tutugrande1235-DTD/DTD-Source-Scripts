@@ -60,9 +60,11 @@ if procced == true then
     end
     if id ~= nil then
         if action == "add" then
+            print("adding at "..issue.." from user "..user.." and comment body:\n  "..content)
             local strucn = user.."@"..content
             ServerIssueService.comment.add(id, strucn)
         elseif action == "remove" then
+            print("removing "..issue)
             ServerIssueService.comment.remove(issue)
         end
     end
