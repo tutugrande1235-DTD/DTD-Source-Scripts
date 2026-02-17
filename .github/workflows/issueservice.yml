@@ -13,7 +13,7 @@ jobs:
       PAT: ${{ secrets.PAT }}
       ISSUE: ${{ github.event.client_payload.issue }}
       CONTENT: ${{ github.event.client_payload.content }}
-      ACTION: ${{ github.event.client_payload.action }}
+      ACTION: ${{ github.event.client_payload.mode }}
       
 
     steps:
