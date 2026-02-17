@@ -63,7 +63,7 @@ if procced == true then
             local strucn = user.."@"..content
             ServerIssueService.comment.add(id, strucn)
         elseif action == "remove" then
-            ServerIssueService.comment.remove(id)
+            ServerIssueService.comment.remove(issue)
         end
     end
 end
