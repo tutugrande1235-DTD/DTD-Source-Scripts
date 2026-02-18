@@ -53,7 +53,7 @@ end
 
 if procced == true then
     local id = nil
-    local isnumber == true
+    local isnumber = true
     local ifn = tonumber(issue)
     if ifn == nil then
         isnumber = false
