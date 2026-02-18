@@ -8,6 +8,7 @@ local users = {}
 
 print("\27[93minitializing...")
 
+if file:match("^%.github/") then print("\27[91mattempt to change a restrict file.") return end
 if file:match("^Cloud/") then print("\27[91mcannot post at cloud! cloud have a own service to it!") return end
 if file:match("^Accounts/") then print("\27[91mcannot post at Accounts! accounts have a own service to it!") return end
 if not file:match("^(.-)/") then print("\27[91mcannot post without a folder!") return end
@@ -90,7 +91,7 @@ if procced == true then
     filed = filed:gsub("Market/","")
     filed = filed:gsub("/content","")
     filed = filed:gsub("@"..user,"")
-    
+
     if file:match("^(.-)/") then
         _G.ServerPostService.post(content, file.."@"..user, mode)
         if mode == "POST" and file:match("^Market/") and (not file:match("/description$")) then
