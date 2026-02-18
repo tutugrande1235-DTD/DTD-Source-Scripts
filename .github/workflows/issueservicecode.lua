@@ -52,15 +52,17 @@ do
 end
 
 if procced == true then
-    local issues = ServerIssueService.get()
     local id = nil
-    for i,v in ipairs(issues) do
-        if v.content == issue then
-            id = v.id
-            break
+    if action == "add" then
+        local issues = ServerIssueService.get()
+        for i,v in ipairs(issues) do
+            if v.content == issue then
+                id = v.id
+                break
+            end
         end
     end
-    if id ~= nil then
+    if id ~= nil or action == "remove" then
         if action == "add" then
             print("adding at "..issue.." from user "..user.." and comment body:\n  "..content)
             local strucn = user.."@"..content
