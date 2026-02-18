@@ -47,6 +47,8 @@ do
             else
                 reply = "hmm... you lose, number got "..random.." and you chose "..number
             end
+        else
+            reply = "BRO CHOOSE A NOMBER!"
         end
 
     elseif body:match("ugly") and (not body:match("not")) then
