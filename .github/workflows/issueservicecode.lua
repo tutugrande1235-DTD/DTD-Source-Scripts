@@ -35,10 +35,12 @@ do
                 table.insert(args, v)
             end
             local hash = args[1]
-            local salt = args[2]
+            local salt = args[3]
             local hash2 = simple_hash(pass, salt)
             if hash2 == hash then
                 procced = true
+            else
+                print("\27[91mincorrect password...")
             end
         else
             print("\27[91minvalid user!")
