@@ -53,7 +53,12 @@ end
 
 if procced == true then
     local id = nil
-    if action == "add" then
+    local isnumber == true
+    local ifn = tonumber(issue)
+    if ifn == nil then
+        isnumber = false
+    end
+    if action == "add" and isnumber == false then
         local issues = ServerIssueService.get()
         for i,v in ipairs(issues) do
             if v.content == issue then
