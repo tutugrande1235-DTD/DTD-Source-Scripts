@@ -21,5 +21,5 @@ jobs:
         run: lua .github/workflows/botcode.lua
         env:
           COMMENT_BODY: ${{ github.event.comment.body }}
-          GITHUB_TOKEN: ${{ secrets.PAT }}
-          ISSUE_NUMBER: 7
+          PAT: ${{ secrets.PAT }}
+          ISSUE_NUMBER: {{ github.event.issue.number }}
