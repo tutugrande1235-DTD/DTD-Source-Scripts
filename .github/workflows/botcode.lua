@@ -1,9 +1,9 @@
 
 local comment = os.getenv("COMMENT_BODY")
 local token = os.getenv("PAT")
-local issue = os.getenv("ISSUE_NUMBER")
+local issue = os.getenv("ISSUE")
 
-if issue == "7" then
+if issue == "inbox" then
     print(issue)
 else
     print(issue)
@@ -74,7 +74,7 @@ if reply and reply ~= "" then
     if form then
         local issues = ServerIssueService.get()
         for i,v in ipairs(issues) do
-            if v.content == "inbox" then
+            if v.content == issue then
                 ins = v.id
                 break
             end
