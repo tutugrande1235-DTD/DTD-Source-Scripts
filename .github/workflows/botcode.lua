@@ -1,6 +1,6 @@
 
 local comment = os.getenv("COMMENT_BODY")
-local token = os.getenv("GITHUB_TOKEN")
+local token = os.getenv("PAT")
 local issue = os.getenv("ISSUE_NUMBER")
 
 if issue == "7" then
