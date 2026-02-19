@@ -22,4 +22,4 @@ jobs:
         env:
           COMMENT_BODY: ${{ github.event.comment.body }}
           PAT: ${{ secrets.PAT }}
-          ISSUE_NUMBER: {{ github.event.issue.number }}
+          ISSUE: {{ github.event.issue.title }}
