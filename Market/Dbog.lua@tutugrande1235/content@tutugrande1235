@@ -1,0 +1,116 @@
+
+
+local config = dofile("dbog.config.lua")
+
+if config.user then
+    DTDUser = config.user
+end
+
+(function()
+    if config.config then
+        if not config.config.tools then return end
+        
+        local tools = {
+            "DTDPostService",
+            "DTDIssueService",
+        }
+        
+        for n,v in pairs(config.config.tools) do
+            for j,k in pairs(tools) do
+                local ff = io.open(k, "r")
+                if ff then
+                    print("\27[96mDBOG: \27[93mtool: "..k.." already installed! cancel.")
+                    ff:close()
+                end
+                if v == k and not ff then
+                    local ss = io.popen("curl -s https://raw.githubusercontent.com/nathanc0dxxx-cpu/DTD/main/SystemManagers/"..v..".lua")
+                    if ss then local c = ss:read("*a") ss:close() local f = io.open(v..".lua", "w") f:write(c) f:close() else
+                        print("\27[96mDBOG: \27[93minstalation of tool: "..k.." failed...")
+                    end
+                elseif v ~= k and not ff then
+                    print("\27[96mDBOG: \27[93minvalid tool: "..k)
+                end
+            end
+        end
+    end
+end)()
+
+if config.config then
+    local sg = config.config.signal
+    if sg then
+        local pipe = io.popen
+        function io.popen(cmd)
+            if cmd:match("^curl") then
+                local sort = math.random(1,4)
+                local time = sort / 2
+                if time then
+                    os.execute("sleep "..time)
+                else
+                    return nil
+                end
+                if sg >= sort then
+                    local obj = {
+                        content = "{\n\"content\": \"this is a test of dbog response on requests\"\n}",
+                        
+                        read = function(self, mode)
+                            if mode == "*a" or mode == "all" then
+                                return self.content
+                            elseif mode == "*l" then
+                                return self.content:gsub("\n(.*)","")
+                            end
+                        end,
+                        
+                        close = function(self)
+                            for k in pairs(self) do self[k] = nil end
+                        end
+                    }
+                    return obj
+                else
+                    return nil
+                end
+            else
+                local p = pipe(cmd)
+                return p
+            end
+        end
+    end
+end
+
+if not config.run then
+    print("\27[96mDBOG: \27[91mcannot run code without run instructions!") return
+else
+    local i = 0
+    for j,v in pairs(config.run) do
+        i = i + 1
+        if i >= 1 then break end
+    end
+    if i <= 0 then
+        print("\27[96mDBOG: \27[91mcannot run code without a valid file!")
+    end
+end
+
+io.write("\27[0m")
+os.execute("clear")
+
+local function start()
+    local i = 0
+    for j,v in pairs(config.run) do
+        i = i + 1
+        local f = io.open(v, "r")
+        if f then
+            local fn, err = load(f:read("*a"))
+            f:close()
+            if not fn then
+                print("\27[96mDBOG: \27[93merror on file: "..v.."\n\27[92mmessage:\n\27[0m"..tostring(err))
+            else
+                fn()
+            end
+        else
+            print("\27[96mDBOG: \27[93mrun instructions : "..i.." on filename: "..v.."\n\27[91mfile doenst exists!")
+            return
+        end
+    end
+end
+start()
+
+
