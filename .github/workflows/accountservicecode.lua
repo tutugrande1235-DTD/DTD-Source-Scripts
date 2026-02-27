@@ -20,9 +20,7 @@ do
     local s = io.popen("curl -s -H 'Authorization: token "..token.."' https://raw.githubusercontent.com/nathanc0dxxx-cpu/DTD/main/SystemManagers/DTDAccountGenerator.lua")
     if s then load(s:read("*a"))() s:close() else print("\27[91mfailed loading service...") end
 end
-
 print("generating user...")
-
 do
     local s = io.popen("curl -s -H 'Authorization: token "..token.."' https://api.github.com/repos/tutugrande1235-DTD/DTD-Source-Scripts/contents/Accounts")
     if s then
@@ -41,14 +39,15 @@ do
                     return
                 end
             end
-            
+
             local salt = generate_salt(16)
             if salt then
                 local hash = simple_hash(pass, salt)
                 if hash then
                     local strucn = hash.."\n"..id.."\n"..salt
-                    
-                    _G.ServerPostService.post(strucn, "Accounts/"..username, "POST")
+                    local b = base64(strucn)
+
+                    _G.ServerPostService.post(b, "Accounts/"..username, "POST")
                     print("\27[92mgenerated!")
                 else
                     print("\27[91mfailed while generating hash...")
