@@ -6,8 +6,12 @@ _G.memo = {
         print("\27[96m[Memo]:\27[0m "..txt)
     end,
     keys = {
-        open = {},
-        close = {}
+        open = {
+            "{",
+        },
+        close = {
+            "}",
+        }
     }
 }
 
@@ -21,7 +25,7 @@ local memocmd = {
             if not dtdstd.args[3] then return end
             if dtdstd.dirpath then dir = dtdstd.dirpath end
             if dir ~= "" then bar = "/" end
-            
+
             local f = io.open(dir..bar..dtdstd.args[3], "r")
             if not f then
                 f = io.open(dir..bar..dtdstd.args[3], "w")
@@ -45,13 +49,13 @@ local memocmd = {
         act = function()
             local a = dtdstd.args[3]
             if not a then return end
-            
+
             local dir = ""
             local bar = ""
             if not dtdstd.args[3] then return end
             if dtdstd.dirpath then dir = dtdstd.dirpath end
             if dir ~= "" then bar = "/" end
-            
+
             local f = io.open(dir..bar..a, "r")
             if f then
                 memo.notify("you want to remove file "..a.."?")
@@ -78,7 +82,7 @@ local memocmd = {
         act = function()
             local file = dtdstd.args[3]
             if not file then memo.err("file not provided!") return end
-            
+
             local dir = ""
             local bar = ""
             if not file then return end
@@ -86,9 +90,9 @@ local memocmd = {
             if dir ~= "" then bar = "/" end
             local fff = file
             if dir ~= "" then fff = dir..bar..file end
-            
+
             local f = io.open(fff, "r")
-            
+
             if f then
                 local cont = f:read("*a")
                 f:close()
@@ -98,30 +102,34 @@ local memocmd = {
                     do
                         for i,v in ipairs(memo.keys.open) do
                             for k in cont:gmatch("([^\n]+)") do
-                                if k:match("%f[%w]"..v.."%f[%W]") then
+                                if k:match("%f[%w]("..v..")%f[%W]") then
                                     indent = indent + 1
                                 end
                             end
                         end
-                        
+
                         for i,v in ipairs(memo.keys.close) do
                             for k in cont:gmatch("([^\n]+)") do
-                                if k:match("%f[%w]"..v.."%f[%W]") then
+                                if k:match("%f[%w]("..v..")%f[%W]") then
                                     indent = indent - 1
                                 end
                             end
                         end
-                        if indent < 0 then indent = 0 end
+                        if indent <= 0 then indent = 0 end
                     end
+                    local function highl(str)
+                        return str
+                    end
+                    
                     os.execute("clear")
                     io.write("\27[0m\27[44m["..file.."]:\27[0m")
                     local i = 0
                     for v in cont:gmatch("([^\n]*)") do
                         i = i + 1
-                        io.write("\n\27[0m\27[2m\27[1m"..i.."\27[0m: "..v:gsub("${memovisuals}",""))
+                        io.write("\n\27[0m\27[47m\27[90m\27[2m"..i.."\27[0m: "..highl(v:gsub("${memovisuals}","")))
                     end
                     io.write("\27[1m\27[90m<\27[0m\n")
-                    print("\27[0m\27[44m[==========]:\27[0m")
+                    print("\27[0m\27[44m[==========]:\27[47m\27[90m"..indent.."\27[0m")
                     os.execute("stty -icanon -echo -isig")
                     local input = io.read(1)
                     if input == "\8" or input == "\127" then
@@ -136,8 +144,9 @@ local memocmd = {
                             memo.err("looks like this file is READONLY or the Shell dont have permissions...")
                         end
                     elseif input == "" or input == "\n" then
-                        if cont:sub(#cont - 5, #cont) == ".exit" then
+                        if cont:sub(#cont - 5, #cont) == "%exit" or input == "×" then
                             os.execute("clear")
+                            os.execute("stty echo icanon isig")
                             memo.notify("file closed and saved!")
                             ss = false
                         else
