@@ -1,11 +1,14 @@
-
-local memo = {
+_G.memo = {
     err = function(txt)
         print("\27[96m[Memo]:\27[91m "..txt)
     end,
     notify = function(txt)
         print("\27[96m[Memo]:\27[0m "..txt)
-    end
+    end,
+    keys = {
+        open = {},
+        close = {}
+    }
 }
 
 local memocmd = {
@@ -91,14 +94,38 @@ local memocmd = {
                 f:close()
                 local ss = true
                 while ss do
+                    local indent = 0
+                    do
+                        for i,v in ipairs(memo.keys.open) do
+                            for k in cont:gmatch("([^\n]+)") do
+                                if k:match("%f[%w]"..v.."%f[%W]") then
+                                    indent = indent + 1
+                                end
+                            end
+                        end
+                        
+                        for i,v in ipairs(memo.keys.close) do
+                            for k in cont:gmatch("([^\n]+)") do
+                                if k:match("%f[%w]"..v.."%f[%W]") then
+                                    indent = indent - 1
+                                end
+                            end
+                        end
+                        if indent < 0 then indent = 0 end
+                    end
                     os.execute("clear")
-                    print("\27[0m\27[44m["..file.."]:\27[0m")
-                    print(cont.."\27[1m\27[90m<\27[0m")
+                    io.write("\27[0m\27[44m["..file.."]:\27[0m")
+                    local i = 0
+                    for v in cont:gmatch("([^\n]*)") do
+                        i = i + 1
+                        io.write("\n\27[0m\27[2m\27[1m"..i.."\27[0m: "..v:gsub("${memovisuals}",""))
+                    end
+                    io.write("\27[1m\27[90m<\27[0m\n")
                     print("\27[0m\27[44m[==========]:\27[0m")
                     os.execute("stty -icanon -echo -isig")
                     local input = io.read(1)
                     if input == "\8" or input == "\127" then
-                        cont = cont:sub(1, #cont - 1)
+                        cont = cont:gsub("${memovisuals}", ""):sub(1, #cont - 1)
                         local ff = io.open(dir..bar..file,"w")
                         if ff then
                             ff:write(cont)
@@ -109,13 +136,15 @@ local memocmd = {
                             memo.err("looks like this file is READONLY or the Shell dont have permissions...")
                         end
                     elseif input == "" or input == "\n" then
-                        cont = cont .. "\n"
-                    elseif input == "^C" then
-                        os.execute("clear")
-                        memo.notify("file closed and saved!")
-                        ss = false
+                        if cont:sub(#cont - 5, #cont) == ".exit" then
+                            os.execute("clear")
+                            memo.notify("file closed and saved!")
+                            ss = false
+                        else
+                            cont = cont .. "\n${memovisuals}" .. string.rep("    ",indent)
+                        end
                     else
-                        cont = cont .. input
+                        cont = cont:gsub("${memovisuals}","") .. input
                     end
                     os.execute("stty icanon echo isig")
                 end
@@ -147,4 +176,3 @@ dtdstd:newcmd({
     end,
     desc = "memo framework tool for studio. type memo for more info."
 })
-
