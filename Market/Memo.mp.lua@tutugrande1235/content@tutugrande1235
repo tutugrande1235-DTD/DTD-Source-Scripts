@@ -7,18 +7,52 @@ _G.memo = {
     end,
     keys = {
         open = {
-            "{",
+            [1] = "{",
         },
         close = {
-            "}",
+            [1] = "}",
+        },
+        words = {
+            [1] = "memo",
+        },
+        colors = {
+            [1] = 96,
         }
-    }
+    },
+    run = {
+        types = {
+            label = {
+                "lua",
+            },
+            cmd = {
+                "lua"
+            }
+        }
+    },
+    key = function(self, word, color)
+        table.insert(self.keys.words, word)
+        table.insert(self.keys.colors, color)
+    end,
+    open = function(self, word)
+        table.insert(self.keys.open, word)
+    end,
+    close = function(self, word)
+        table.insert(self.keys.close, word)
+    end,
+    cmd = function(self, label, cmd)
+        table.insert(self.run.types.label, label)
+        if not cmd then
+            table.insert(self.run.types.cmd, label)
+        else
+            table.insert(self.run.types.cmd, cmd)
+        end
+    end
 }
 
 local memocmd = {
     {
         token = "new",
-        desc = "create a new file",
+        desc = "create a new object",
         act = function()
             local dir = ""
             local bar = ""
@@ -28,6 +62,10 @@ local memocmd = {
 
             local f = io.open(dir..bar..dtdstd.args[3], "r")
             if not f then
+                if dtdstd.args[4] == "folder" then
+                    os.execute("mkdir "..dir..bar..dtdstd.args[3])
+                    return
+                end
                 f = io.open(dir..bar..dtdstd.args[3], "w")
                 if f then
                     f:write("[empty]")
@@ -45,7 +83,7 @@ local memocmd = {
     },
     {
         token = "remove",
-        desc = "remove a existent file.",
+        desc = "remove a existent object.",
         act = function()
             local a = dtdstd.args[3]
             if not a then return end
@@ -57,7 +95,7 @@ local memocmd = {
             if dir ~= "" then bar = "/" end
 
             local f = io.open(dir..bar..a, "r")
-            if f then
+            if f and dtdstd.args[4] then
                 memo.notify("you want to remove file "..a.."?")
                 io.write("\27[92m[Y]\27[0m/\27[91m[N]\27[0m:")
                 os.execute("stty -icanon -echo")
@@ -72,7 +110,7 @@ local memocmd = {
                 end
                 os.execute("stty icanon echo")
             else
-                memo.err("file doenst exists...")
+                memo.err("object doenst exists...")
             end
         end
     },
@@ -97,32 +135,61 @@ local memocmd = {
                 local cont = f:read("*a")
                 f:close()
                 local ss = true
+                local cursor = 0
                 os.execute("stty -icanon -echo -isig")
                 while ss do
+                    os.execute("clear")
                     local indent = 0
                     do
+                        local contg = cont:gsub("\"(.-)\"","")
+                        
                         for i,v in ipairs(memo.keys.open) do
-                            for k in cont:gmatch("([^\n]+)") do
-                                if k:match("%f[%w]("..v..")%f[%W]") then
+                            for k in contg:gmatch("([^\n]*)") do
+                                if k:match(v) then
                                     indent = indent + 1
                                 end
                             end
                         end
 
                         for i,v in ipairs(memo.keys.close) do
-                            for k in cont:gmatch("([^\n]+)") do
-                                if k:match("%f[%w]("..v..")%f[%W]") then
+                            for k in contg:gmatch("([^\n]*)") do
+                                if k:match(v) then
                                     indent = indent - 1
                                 end
                             end
                         end
-                        if indent <= 0 then indent = 0 end
+                        if indent < 0 then indent = 0 end
                     end
+                        
                     local function highl(str)
+                        local strs = {}
+                        local strs2 = {}
+                        local i = 0
+                        for v in str:gmatch('(".-")') do
+                            i = i + 1
+                            str = str:gsub(v,"${mmstring"..i)
+                            table.insert(strs, v)
+                        end i = 0
+                        for v in str:gmatch("('.-')") do
+                            i = i + 1
+                            str = str:gsub(v,"${mmstring2"..i)
+                            table.insert(strs2, v)
+                        end
+                        
+                        
+                        for i,v in ipairs(memo.keys.words) do
+                            local k = memo.keys.colors[i]
+                            str = str:gsub("%f[%w]"..v.."%f[%W]", "\27["..k.."m"..v.."\27[0m")
+                        end
+                        str = str:gsub("%f[%w](%d+)%f[%W]","\27[96m%1\27[0m")
+                        for i,v in ipairs(strs) do
+                            str = str:gsub("${mmstring"..i,"\27[32m"..v.."\27[0m")
+                        end for i,v in ipairs(strs2) do
+                            str = str:gsub("${mmstring2"..i,"\27[32m"..v.."\27[0m")
+                        end
+                        
                         return str
                     end
-
-                    os.execute("clear")
                     io.write("\27[0m\27[44m["..file.."]:\27[0m")
                     local i = 0
                     for v in cont:gmatch("([^\n]*)") do
@@ -130,13 +197,34 @@ local memocmd = {
                         io.write("\n\27[0m\27[47m\27[90m\27[2m"..i.."\27[0m: "..highl(v:gsub("${memovisuals}","")))
                     end
                     io.write("\27[1m\27[90m<\27[0m\n")
-                    print("\27[0m\27[44m[==========]:\27[47m\27[90m"..indent.."\27[0m")
+                    
+                    print("\27[0m\27[44m[==========]:\27[47m\27[90m"..indent.."\27[43m\27[30m"..cursor.."\27[0m")
+                    io.write(" > \27[90m <Close> | <Run>\27[0m\n")
+                    io.write(" > \27[92m [CTRL+C]|[CTRL+R]\27[0m")
                     local input = io.read(1)
+                    
                     if input == "\8" or input == "\127" then
-                        cont = cont:gsub("${memovisuals}", ""):sub(1, #cont - 1)
+                        cont = cont:gsub("${memovisuals}", ""):gsub("\n$",""):sub(1, #cont - 1)
                     elseif input == "" or input == "\n" then
+                        for i,v in ipairs(memo.keys.close) do
+                            if cont:match(v.."$") == v then
+                                local r = #v + 4
+                                local g = cont:sub(#cont + 1 - r, #cont - #v)
+                                print("\27[43m"..g.."\27[0m")
+                                io.read(1)
+                                if g ~= "    " then
+                                    r = #v
+                                end
+                                    
+                                cont = cont:sub(1, #cont - r) .. v
+                                break
+                            end
+                        end
+                        
                         cont = cont .. "\n${memovisuals}" .. string.rep("    ",indent)
+                        
                     elseif input == "\3" then
+                        os.execute("clear")
                         ss = false
                         local ff = io.open(dir..bar..file,"w")
                         if ff then
@@ -149,6 +237,63 @@ local memocmd = {
                             memo.err("looks like this file is READONLY or the Shell dont have permissions...")
                         end
                         os.execute("stty icanon echo isig")
+                    elseif input == "\18" then
+                        local oldp = print
+                        local logs = ""
+                        print = function(...)
+                            local str = ""
+                            local strr = {...}
+                            for i,v in pairs(strr) do
+                                str = str .. "  " .. v
+                            end
+                            logs = logs .. "\n" .. str
+                            oldp(...)
+                        end
+                        os.execute("stty icanon echo")
+                        os.execute("clear")
+                        memo.notify("updating...")
+                        local ff = io.open(dir..bar..file,"w")
+                        if ff then
+                            ff:write(cont)
+                            ff:close()
+                            memo.notify("\27[92mfile closed and saved!")
+                        else
+                            ss = false
+                            os.execute("clear")
+                            memo.err("looks like this file is READONLY or the Shell dont have permissions...")
+                        end
+                        local h = io.open(dir..bar..file,"r")
+                        local code = ""
+                        if h then
+                            code = h:read("*a")
+                            h:close()
+                        end
+                        memo.notify("content:\n"..code)
+                        memo.notify("running...")
+                        local out = ""
+                        local label = ""
+                        for i,v in ipairs(memo.run.types.label) do
+                            if file:match("%."..v.."$") then
+                                label = v
+                                os.execute("clear")
+                                handle = os.execute(memo.run.types.cmd[i].." "..dir..bar..file.." 2>&1","r")
+                                out = handle
+                                break
+                            end
+                        end
+                        os.execute("stty -icanon -echo")
+                        print()
+                        memo.notify("\27[32m[RUN COMPLETE | Press Enter]:\27[0m")
+                        io.read(1)
+                        print = oldp
+                        os.execute("clear")
+                        print("\27[44m[LOGS | RUN]:\27[0m "..label)
+                        print(logs)
+                        print("\27[0m\27[44m[STDOUT|CODE]:\27[0m "..dir..bar..file)
+                        print(out)
+                        print("\27[0m\27[44m[==================]:\27[0m")
+                        memo.notify("press ENTER:")
+                        io.read(1)
                     else
                         cont = cont:gsub("${memovisuals}","") .. input
                     end
@@ -181,3 +326,27 @@ dtdstd:newcmd({
     end,
     desc = "memo framework tool for studio. type memo for more info."
 })
+
+do
+    local p = io.popen("ls")
+    if p then
+        local c = p:read("*a")
+        p:close()
+        if c ~= "" then
+            local f = false
+            for v in c:gmatch("%S+") do
+                if v:match("%.ml%.lua$") then
+                    dofile(v)
+                    memo.notify("loaded: \27[92m"..v)
+                    f = true
+                end
+            end if f == false then
+                memo.err("no plugin found.")
+            end
+        else
+            memo.err("no files found.")
+        end
+    else
+        memo.err("failed while loading plugins...")
+    end
+end
