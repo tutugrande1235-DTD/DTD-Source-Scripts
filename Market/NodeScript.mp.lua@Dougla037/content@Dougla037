@@ -1,0 +1,22 @@
+require("NodeScriptCode.lua")
+
+dtdstd:newcmd({
+    token = "node",
+    desc = "compile and run a nodescript file.",
+    act = function()
+        local args = dtdstd.args
+        local file = args[2]
+        if file then
+            local f = io.open(dtdstd.dirpath..file, "r")
+            if f then
+                local code = f:read("*a")
+                f:close()
+                _G.nds.run(code)
+            else
+                print("\27[96mnd: \27[91mNO FILE FOUND!")
+            end
+        else
+            print("\27[96mnd: \27[91mNO FILE PROVIDED!")
+        end
+    end
+})
