@@ -1,0 +1,172 @@
+--#include NodeScriptCmd.dtdp.lua
+local nodes = {}
+
+local function log(mode, ...)
+    if mode == true then
+        print(...)
+    end
+end
+
+function nodes.run(cd, l)
+    local function nt(txt)
+        log(l, "\27[92mnds: \27[0m"..txt)
+    end
+    nt("compiling code...")
+    local function compile(code)
+    local node = {}
+    for g in code:gmatch("\"(.-)\"") do
+        v = g:gsub(" ","${nodespace}")
+        code = code:gsub(g, v)
+    end
+    for v in code:gmatch("%S+") do
+        table.insert(node, v)
+    end local node2 = node
+    for i,v in ipairs(node2) do
+        node[i] = v:gsub("${nodespace}"," ")
+    end
+    return node
+    end
+    local node = compile(cd)
+    nt("")
+    local skipnode = {}
+    local script = {
+        {
+            key = "log",
+            act = function(d, i)
+                local arg = d[i + 1]
+                if arg then
+                    return string.format([[io.write(%s)]], arg)
+                else
+                    io.stderr:write("on key log: NO BOX!")
+                end
+            end
+        },
+        {
+            key = "box",
+            act = function(d, i)
+                local it = 0
+                local val = false
+                local toset = {}
+                local toset2 = ""
+                local finished = false
+                local values = ""
+                while true do
+                    it = it + 1
+                    local arg = d[i + it]
+                    if arg == "=" then
+                        val = true
+                    end
+                    if val == false then
+                        table.insert(toset, arg)
+                        toset2 = toset2..arg..", "
+                    else
+                        for j,v in ipairs(toset) do
+                            local arg = d[i + it + j]
+                            if not arg then
+                                io.stderr:write("on key box: empty value to "..v)
+                            end
+                            values = values ..arg.. ", "
+                        end
+                        finished = true
+                    end
+                    if finished == true then break end
+                end
+                toset2 = toset2:sub(1, #toset2 - 2)
+                values = values:sub(1, #values - 2)
+                return string.format([[
+                    local %s = %s
+                ]], toset2, values)
+            end
+        },
+        {
+            key = "if",
+            act = function(d, i)
+                local target = d[i + 1]
+                local logic = d[i + 2]
+                local arg = d[i + 3]
+                local func = d[i + 4]
+                if target and logic and arg then
+                    return string.format([[
+                        if %s %s %s then %s() end
+                    ]],target, logic, arg, func)
+                else
+                    io.stderr:write("on key if: MISSING BOXES!")
+                end
+            end
+        },
+        {
+            key = "task",
+            act = function(d,i)
+                local name = d[i + 1]
+                if not name then io.stderr:write("on key task: NO NAME") end
+                local code = ""
+                local tocode = false
+                local it = 0
+                while true do
+                    it = it + 1
+                    local arg = d[i + it]
+                    if arg == "{" and tocode == false then
+                        tocode = true
+                    end
+                    
+                    if arg == "}" then
+                        skipnode[i + it] = true
+                        tocode = false
+                        break
+                    end
+                    
+                    if tocode == true then
+                        code = code .. arg .. " "
+                    end
+                end
+                
+                local nd = compile(code)
+                local ccode = code
+                code = ""
+                for j,v in ipairs(nd) do
+                    for _,k in pairs(script) do
+                        if v == k.key then
+                            local lua = k.act(nd, j)
+                            code = code..lua.."\n"
+                            node[i + j] = ""
+                        end
+                    end
+                end
+                node[i] = ""
+                node[i + 1] = ""
+                node[i+2] = ""
+                return string.format([[
+                    local function %s ()
+                        %s
+                    end
+                ]], name, code)
+            end
+        },
+    }
+    local luacode = ""
+    
+    for i,v in ipairs(node) do
+        for _,k in pairs(script) do
+            local skp = skipnode[i]
+            if not skp then skp = false end
+            if v == k.key and skp == false then
+                local sucess, err = pcall(k.act, node, i)
+                if sucess then
+                    luacode = luacode .. err .. "\n"
+                else
+                    nt("\27[91mERROR!\27[0m\n > "..tostring(err))
+                end
+            end
+        end
+    end
+    
+    local fn, err = load(luacode)
+    if not fn then
+        nt("\27[91mERROR!\27[0m\n > "..tostring(err))
+    else
+        print(luacode)
+        fn()
+    end
+end
+_G.nds = nodes
+return nodes
