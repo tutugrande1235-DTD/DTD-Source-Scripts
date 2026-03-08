@@ -1,5 +1,7 @@
 #!/bin/lua
-local cfy = dofile("cfylib.lua")
+local prefix = os.getenv("PREFIX")
+if not prefix then prefix = "/usr" end
+local cfy = dofile(prefix.."/bin/cfylib.lua")
 
 local arg = {...}
 local file = arg[1]
