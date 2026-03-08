@@ -99,7 +99,7 @@ function c.run(code)
                 bf[sbf][m] = r
                 return r
             end
-        }
+        },
     }
     local cout = ""
     
@@ -114,17 +114,23 @@ function c.run(code)
             io.flush()
         end
     end io.write("\27[0;0H")
+    local got = nil
     
     for i,v in ipairs(cd) do
+        got = false
         for j,k in pairs(script) do
             if v == k.key then
                 local out, er = pcall(k.act, i,cd)
                 if out then
+                    got = true
                     cout = cout .. tostring(out) .. "\n"
                 else
                     io.stderr:write("cfy: \27[91mERROR: \27[0m"..er.."\n\n")
                 end
             end
+        end
+        if got == false then
+            io.stderr:write("cfy: \27[91mERROR: \27[0mt:"..i..": UNKNOWN KEY")
         end
     end
     
