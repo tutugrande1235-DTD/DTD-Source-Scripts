@@ -1,0 +1,19 @@
+#!/bin/lua
+local cfy = require("cfylib")
+
+local arg = {...}
+local file = arg[1]
+
+if file then
+    local f = io.open(file,"r")
+    if f then
+        local code = f:read("*a")
+        f:close()
+        
+        cfy.run(code)
+    else
+        print("cfy: \27[91mfile not found.")
+    end
+else
+    print("cfy: \27[91mno file provided.\27[0m")
+end
