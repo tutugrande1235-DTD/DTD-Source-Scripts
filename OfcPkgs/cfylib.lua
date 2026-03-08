@@ -129,9 +129,6 @@ function c.run(code)
                 end
             end
         end
-        if got == false then
-            io.stderr:write("cfy: \27[91mERROR: \27[0mt:"..i..": UNKNOWN KEY")
-        end
     end
     
     return cout
