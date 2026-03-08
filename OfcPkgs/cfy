@@ -1,5 +1,5 @@
 #!/bin/lua
-local cfy = require("cfylib")
+local cfy = dofile("cfylib.lua")
 
 local arg = {...}
 local file = arg[1]
