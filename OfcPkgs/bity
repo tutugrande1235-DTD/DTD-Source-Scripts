@@ -1,0 +1,23 @@
+#!/bin/lua
+local lib = dofile("./bintlib.lua")
+
+local args = {...}
+
+local file = args[1]
+if not file then
+    print("bint: missing file.")
+    return
+end
+
+if args[3] then
+    print("bint: too many args.")
+else
+    local f = io.open(file, "r")
+    if not f then
+        print("bint: "..file.." not found")
+    else
+        local c = f:read("*a")
+        f:close()
+        lib.run(c)
+    end
+end
