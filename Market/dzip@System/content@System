@@ -1,0 +1,33 @@
+#!/bin/lua
+
+local path = os.getenv("PREFIX") or "/usr"
+path = path.."/bin/"
+local f = io.open("DCompact.lua","r")
+if f then
+    path = ""
+    f:close()
+end
+
+local dzip = dofile(path.."DCompact.lua")
+
+local args = {...}
+local folder = args[1]
+local ecode = nil
+local folderreal = args[2]
+if folderreal == nil then
+    folderreal = folder
+end
+
+if folder == "unpack" then
+    ecode = dzip.decompact(folderreal)
+elseif folder == "pack" then
+    ecode = dzip.compact(folderreal)
+else
+    ecode = dzip.compact(folder)
+end
+
+if ecode == 0 then
+    print("folder "..folderreal.." compacted sucessfully!")
+else
+    print("\27[91mfolder "..folderreal.." cannot be compacted or write perm denied or doenst exists...\27[0m")
+end
